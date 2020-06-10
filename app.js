@@ -10,12 +10,14 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
 
+var employees = [];
+
 inquirer
   .prompt([
     {
       type: "input",
       name: "name",
-      message: "What is your name?",
+      message: "What is employee's name?",
     },
   ])
   .then((answers) => {
