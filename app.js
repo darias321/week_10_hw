@@ -16,13 +16,144 @@ inquirer
   .prompt([
     {
       type: "input",
-      name: "name",
-      message: "What is employee's name?",
+      name: "manager",
+      message: "Please enter name of the manager",
+    },
+    {
+      type: "input",
+      name: "managerId",
+      message: "Please enter the ID of the manager",
+    },
+    {
+      type: "input",
+      name: "officeNumber",
+      message: "Please enter manager's office number",
+    },
+    {
+      type: "input",
+      name: "email",
+      message: "Please enter manager's email",
     },
   ])
   .then((answers) => {
+    employees.push(
+      new Manager(
+        answers.manager,
+        answers.managerId,
+        answers.officeNumber,
+        answers.email
+      )
+    );
+    determineEmployee();
     console.log("Answer:", answers.name);
   });
+
+function createIntern() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "intern",
+        message: "Please enter name of the intern",
+      },
+      {
+        type: "input",
+        name: "internId",
+        message: "Please enter the ID of the intern",
+      },
+      {
+        type: "input",
+        name: "school",
+        message: "Please enter intern's school name",
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Please enter intern's email",
+      },
+    ])
+    .then((answers) => {
+      employees.push(
+        new Intern(
+          answers.intern,
+          answers.internId,
+          answers.school,
+          answers.email
+        )
+      );
+      determineEmployee();
+    });
+}
+
+function createEngineer() {
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "engineer",
+        message: "Please enter name of the engineer",
+      },
+      {
+        type: "input",
+        name: "engineerId",
+        message: "Please enter the ID of the engineer",
+      },
+      {
+        type: "input",
+        name: "github",
+        message: "Please enter engineer's github",
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "Please enter engineer's email",
+      },
+    ])
+    .then((answers) => {
+      employees.push(
+        new Engineer(
+          answers.engineer,
+          answers.engineerId,
+          answers.github,
+          answers.email
+        )
+      );
+      determineEmployee();
+    });
+}
+
+function determineEmployee() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        message: "Please select the type of employee you would like to create:",
+        name: "employee",
+        choices: ["Intern", "Engineer", "Done"],
+      },
+    ])
+
+    .then((answers) => {
+      const { employee } = answers;
+      if (employee === "Engineer") {
+        createEngineer();
+      }
+      if (employee === "Intern") {
+        createIntern();
+      }
+      if (employee === "Done") {
+        createTeamHtml();
+      }
+    });
+}
+
+function createTeamHtml() {
+  try {
+    fs.writeFileSync("./team.html", render(employees));
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
